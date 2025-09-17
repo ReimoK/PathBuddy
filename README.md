@@ -1,5 +1,3 @@
-Of course! Here is the updated `README.md` file, now including a feature for using the camera during sightseeing.
-
 # Smart Travel Companion
 
 ## Short Description
