@@ -11,7 +11,8 @@ A personalized travel assistant designed to streamline trip planning, provide re
 | **Magnus** | **Lead Developer / Builder** – Leads the process of coding among the team. |
 | **Hannes** | **Researcher** – Leads the process of gathering information, facts and background for the project. |
 | **Reimo** | **Project Leader / Manager** – Keeps the team organized, assigns tasks and ensures deadlines are met. |
-| **Tõnis** | **Editor & Presenter** – Leads the process of writing the report or documentation, checks for grammar, flow, and clarity and leads the presentation. |
+| **Tõnis** | **Editor** – Leads the process of writing the report or documentation, checks for grammar, flow, and clarity and leads the presentation. |
+| **Andreas** | **Presenter** – Leads the presentation. |
 
 While each team member has a designated lead role, all members will be actively involved in every aspect of the project, including research, development, writing and presenting.
 
