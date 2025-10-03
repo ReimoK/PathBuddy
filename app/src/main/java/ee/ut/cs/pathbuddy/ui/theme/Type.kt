@@ -1,4 +1,4 @@
-package com.example.pathbuddy.ui.theme
+package ee.ut.cs.pathbuddy.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
