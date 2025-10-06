@@ -50,7 +50,12 @@ fun HomeScreen(navController: NavController) {
                 .padding(horizontal = 24.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            WelcomeHeader(modifier = Modifier.fillMaxWidth())
+            WelcomeHeader(
+                modifier = Modifier.fillMaxWidth(),
+                onProfileClick = {
+                    navController.navigate(Screen.Profile.route)
+                }
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -144,7 +149,7 @@ fun TripCard(trip: Trip, onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 
 @Composable
-fun WelcomeHeader(modifier: Modifier = Modifier) {
+fun WelcomeHeader(modifier: Modifier = Modifier, onProfileClick: () -> Unit = {}) {
     Card(
         modifier = modifier.height(96.dp),
         shape = RoundedCornerShape(12.dp),
@@ -160,7 +165,7 @@ fun WelcomeHeader(modifier: Modifier = Modifier) {
             Icon(
                 Icons.Default.AccountCircle,
                 contentDescription = "User Profile",
-                modifier = Modifier.size(56.dp),
+                modifier = Modifier.size(56.dp).clickable { onProfileClick() },
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
             Spacer(modifier = Modifier.width(16.dp))
