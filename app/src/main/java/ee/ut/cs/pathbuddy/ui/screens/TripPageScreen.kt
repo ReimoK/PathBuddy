@@ -6,12 +6,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import ee.ut.cs.pathbuddy.ui.components.BackButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripPageScreen(navController: NavController, tripId: Int) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Trip Details") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Trip Details") },
+                navigationIcon = { BackButton(navController) }
+            )
+        }
+
     ) { padding ->
         Column(
             modifier = Modifier

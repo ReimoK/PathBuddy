@@ -10,11 +10,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import ee.ut.cs.pathbuddy.ui.components.BackButton
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomeScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Welcome") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Welcome") },
+                navigationIcon = { BackButton(navController) }
+            )
+        }
     ) { padding ->
         Column(
             modifier = Modifier
