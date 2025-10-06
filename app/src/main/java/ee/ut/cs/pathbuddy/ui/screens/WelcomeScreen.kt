@@ -12,6 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ee.ut.cs.pathbuddy.ui.components.BackButton
 
+/**
+ * A simple informational screen that welcomes the user to the app.
+ *
+ * @param navController The navigation controller for handling back navigation.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomeScreen(navController: NavController) {

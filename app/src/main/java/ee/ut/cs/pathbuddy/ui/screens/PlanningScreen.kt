@@ -1,188 +1,124 @@
 package ee.ut.cs.pathbuddy.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import ee.ut.cs.pathbuddy.PathBuddyApplication
 import ee.ut.cs.pathbuddy.navigation.Screen
+import ee.ut.cs.pathbuddy.ui.components.BackButton
+import ee.ut.cs.pathbuddy.ui.viewmodel.PlanningEvent
+import ee.ut.cs.pathbuddy.ui.viewmodel.PlanningViewModel
 
+/**
+ * A screen for users to input details for a new trip.
+ * It includes fields for destination, dates, interests, and budget.
+ *
+ * @param navController The navigation controller for navigating back or to the new trip page.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlanningScreen(navController: NavController) {
-    var destination by remember { mutableStateOf("") }
-    var startDate by remember { mutableStateOf("") }
-    var endDate by remember { mutableStateOf("") }
-    var interests by remember { mutableStateOf("") }
-    val budgetOptions = listOf("Low", "Moderate", "High")
-    var selectedBudget by remember { mutableStateOf(budgetOptions[1]) } // Default budget "Moderate"
-    var budgetExpanded by remember { mutableStateOf(false) }
+    val container = (LocalContext.current.applicationContext as PathBuddyApplication).container
+    val viewModel: PlanningViewModel = viewModel(factory = PlanningViewModel.provideFactory(container))
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // This effect listens for one-time events from the ViewModel, like navigation or snackbar messages.
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                // When a trip is saved, navigate to its details page and clear the back stack up to Home.
+                is PlanningEvent.TripSaved -> {
+                    navController.navigate(Screen.TripPage.createRoute(event.tripId)) {
+                        popUpTo(Screen.Home.route)
+                    }
+                }
+                // Show a snackbar message for errors or other info.
+                is PlanningEvent.ShowMessage -> snackbarHostState.showSnackbar(event.message)
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-                title = {},
-                navigationIcon = {
-                    TextButton(
-                        onClick = { navController.popBackStack() },
-                        contentPadding = PaddingValues(start = 16.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to Dashboard")
-                            Spacer(Modifier.width(4.dp))
-                            Text(
-                                "Back to Dashboard",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
+                title = { Text("Plan Your Trip") },
+                navigationIcon = { BackButton(navController) }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 1. Header
-            Text(
-                "Plan Your Next\nAdventure",
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                "Let our AI craft the perfect trip for you.",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-
-            // 2. Destination
-            Text("Destination", style = MaterialTheme.typography.labelLarge)
             OutlinedTextField(
-                value = destination,
-                onValueChange = { destination = it },
-                placeholder = { Text("e.g., Paris, France") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 3. Start Date
-            Text("Start Date", style = MaterialTheme.typography.labelLarge)
-            OutlinedTextField(
-                value = startDate,
-                onValueChange = { startDate = it },
-                placeholder = { Text("mm/dd/yyyy") },
+                value = uiState.destination,
+                onValueChange = viewModel::onDestinationChanged,
+                label = { Text("Destination") },
                 modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    Icon(
-                        Icons.Filled.CalendarToday,
-                        contentDescription = "Select Start Date",
-                        modifier = Modifier.clickable { /* TODO: Open Date Picker */ }
-                    )
+                isError = uiState.destinationError != null,
+                supportingText = {
+                    uiState.destinationError?.let { Text(it) }
                 }
             )
-            Spacer(modifier = Modifier.height(12.dp))
 
-            // 4. End Date
-            Text("End Date", style = MaterialTheme.typography.labelLarge)
             OutlinedTextField(
-                value = endDate,
-                onValueChange = { endDate = it },
-                placeholder = { Text("mm/dd/yyyy") },
+                value = uiState.startDate,
+                onValueChange = viewModel::onStartDateChanged,
+                label = { Text("Start Date (YYYY-MM-DD)") },
                 modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    Icon(
-                        Icons.Filled.CalendarToday,
-                        contentDescription = "Select End Date",
-                        modifier = Modifier.clickable { /* TODO: Open Date Picker */ }
-                    )
+                isError = uiState.startDateError != null,
+                supportingText = {
+                    uiState.startDateError?.let { Text(it) }
                 }
             )
-            Spacer(modifier = Modifier.height(12.dp))
 
-            //  5. Interests
-            Text("Interests", style = MaterialTheme.typography.labelLarge)
             OutlinedTextField(
-                value = interests,
-                onValueChange = { interests = it },
-                placeholder = { Text("e.g., History, Museums, Local Cuisine") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            //  6. Budget
-            Text("Budget", style = MaterialTheme.typography.labelLarge)
-            ExposedDropdownMenuBox(
-                expanded = budgetExpanded,
-                onExpandedChange = { budgetExpanded = !budgetExpanded },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                OutlinedTextField(
-                    value = selectedBudget,
-                    onValueChange = { },
-                    readOnly = true,
-                    trailingIcon = {
-                        Icon(
-                            if (budgetExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                            contentDescription = "Select Budget"
-                        )
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = budgetExpanded,
-                    onDismissRequest = { budgetExpanded = false }
-                ) {
-                    budgetOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                selectedBudget = option
-                                budgetExpanded = false
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                        )
-                    }
+                value = uiState.endDate,
+                onValueChange = viewModel::onEndDateChanged,
+                label = { Text("End Date (YYYY-MM-DD)") },
+                modifier = Modifier.fillMaxWidth(),
+                isError = uiState.endDateError != null,
+                supportingText = {
+                    uiState.endDateError?.let { Text(it) }
                 }
-            }
-            Spacer(modifier = Modifier.height(32.dp))
+            )
 
-            // 7. Generate Button
+            OutlinedTextField(
+                value = uiState.interests,
+                onValueChange = viewModel::onInterestsChanged,
+                label = { Text("Interests / Activities") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = false
+            )
+
+            OutlinedTextField(
+                value = uiState.budget,
+                onValueChange = viewModel::onBudgetChanged,
+                label = { Text("Budget (optional)") },
+                modifier = Modifier.fillMaxWidth(),
+                isError = uiState.budget != null,
+                supportingText = {
+                    uiState.budget?.let { Text(it) }
+                }
+            )
+
             Button(
-                onClick = {
-                    // TODO: Collect data and send to generation service.
-                    navController.navigate(Screen.Home.route)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
+                onClick = viewModel::submit,
+                enabled = !uiState.isSaving,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    Icons.Filled.AutoAwesome,
-                    contentDescription = "Generate",
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text("Generate Itinerary", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                Text(if (uiState.isSaving) "Saving..." else "Generate")
             }
         }
     }

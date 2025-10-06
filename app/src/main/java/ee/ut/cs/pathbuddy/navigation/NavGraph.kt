@@ -16,9 +16,7 @@ sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Welcome : Screen("welcome")
     object Planning : Screen("planning")
-
     object Profile : Screen("profile")
-
     object TripPage : Screen("trip_page/{tripId}") {
         fun createRoute(tripId: Int) = "trip_page/$tripId"
     }
@@ -45,8 +43,6 @@ fun PathBuddyNavHost(navController: NavHostController) {
             ProfileScreen(navController)
         }
 
-
-
         composable(
             route = Screen.TripPage.route,
             arguments = listOf(navArgument("tripId") { type = NavType.IntType })
@@ -54,5 +50,6 @@ fun PathBuddyNavHost(navController: NavHostController) {
             val tripId = backStackEntry.arguments?.getInt("tripId") ?: 0
             TripPageScreen(navController, tripId)
         }
+
     }
 }
