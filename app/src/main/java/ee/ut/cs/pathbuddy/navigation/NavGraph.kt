@@ -9,9 +9,11 @@ import androidx.navigation.navArgument
 import ee.ut.cs.pathbuddy.ui.screens.HomeScreen
 import ee.ut.cs.pathbuddy.ui.screens.PlanningScreen
 import ee.ut.cs.pathbuddy.ui.screens.TripPageScreen
+import ee.ut.cs.pathbuddy.ui.screens.WelcomeScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
+    object Welcome : Screen("welcome")
     object Planning : Screen("planning")
     object TripPage : Screen("trip_page/{tripId}") {
         fun createRoute(tripId: Int) = "trip_page/$tripId"
@@ -26,6 +28,10 @@ fun PathBuddyNavHost(navController: NavHostController) {
     ) {
         composable(Screen.Home.route) {
             HomeScreen(navController)
+        }
+
+        composable(Screen.Welcome.route) {
+            WelcomeScreen(navController)
         }
 
         composable(Screen.Planning.route) {
