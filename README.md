@@ -16,32 +16,69 @@ A personalized travel assistant designed to streamline trip planning, provide re
 
 While each team member has a designated lead role, all members will be actively involved in every aspect of the project, including research, development, writing and presenting.
 
-## Planned Features
+---
 
-Our goal is to create a comprehensive and user-friendly travel application. The core features we plan to implement are:
+## Project Progress (As of Step 2)
 
-1.  **User Authentication & Profiles:** Secure sign-up and login for users. Profiles will store personalized preferences like preferred travel modes, dietary restrictions and interests to provide tailored recommendations.
-2.  **Trip Planning & Itinerary Management:** A robust trip planning module that allows users to create and manage detailed itineraries. Users will be able to add destinations, schedule activities and visualize their travel plans.
-3.  **Real-Time Navigation & Geolocation:** Integration with the Google Maps API for live location tracking, turn-by-turn navigation and discovery of nearby points of interest.
-4.  **Integrated Camera for Photo Journaling:** An in-app camera feature that allows users to capture photos of sights and automatically tag them to their current location and itinerary item. This creates a visual travel diary, directly linking memories to the trip timeline.
-5.  **Cloud Data Persistence with Firebase:** Utilization of Firebase Firestore to store user profiles, trip logs (including photo references) and preferences in the cloud. This ensures data is synced and accessible across multiple devices.
-6.  **Dynamic Weather Integration:** The app will fetch real-time weather data from the OpenWeather API and dynamically adjust itineraries, suggesting indoor alternatives on rainy days, for example.
+This milestone focused on building the core architectural foundation and implementing the essential local functionalities of the application. The project now has a robust, scalable structure based on modern Android development principles (MVVM, Repository Pattern, Dependency Injection via a manual container).
 
-## Tools & Frameworks
+**Key achievements include:**
+*   **Solid Local Database:** A fully functional local database using Room for storing and managing user-created trips.
+*   **User Profile Storage:** Local storage for user profile data (name, home base, interests) using Jetpack DataStore.
+*   **Reactive UI:** The UI is built entirely with Jetpack Compose and automatically updates when data in the database changes.
+*   **Complete UI/UX Flow:** Users can now create, save, view,and manage trips and their own profile information within the app.
 
-The project will be developed using the following technologies:
+---
+
+## Feature Implementation Status
+
+The following is a breakdown of the originally planned features and their current implementation status.
+
+*   **✅ Implemented - Trip Planning & Itinerary Management**
+    *   A robust trip planning module has been created. Users can fill out a form to create a new trip, including destination, dates and interests. This input will serve as the prompt for the AI. All created trips are saved to a local Room database and displayed on the Home Screen.
+
+*   **🟡 In Progress - User Profiles**
+    *   **Implemented:** A local profile system is in place. Users can save their name, location and favorite interests, which are persisted on the device using Jetpack DataStore. The Profile Screen has a full UI for both viewing and editing this information.
+    *   **Pending:** Secure cloud-based user authentication (Sign-up/Login with Firebase).
+
+*   **⚫ Not Implemented - Real-Time Navigation & Geolocation**
+    *   The UI contains placeholders for map integration, but the connection to the Google Maps API is a future task.
+
+*   **⚫ Not Implemented - Integrated Camera for Photo Journaling**
+    *   The in-app camera functionality has not yet been implemented.
+
+*   **⚫ Not Implemented - Cloud Data Persistence with Firebase**
+    *   All data persistence is currently local to the device using Room and DataStore. The migration to Firebase Firestore for cloud syncing is a future task.
+
+*   **⚫ Not Implemented - Dynamic Weather Integration**
+    *   The connection to the OpenWeather API has not yet been implemented.
+
+*   **⚫ Not Implemented - AI-Powered Itinerary Generation**
+    *   Leverage a powerful generative AI model (like **Google's Gemini**) to automatically create detailed, day-by-day itineraries. The AI will take the user's destination, travel dates, and interests as input to suggest activities, restaurants and logical routes, forming a complete, ready-to-use travel plan.
+
+---
+
+## Tools & Frameworks in Use
+
+The project is currently being developed using the following technologies:
 
 *   **Language:** Kotlin
 *   **IDE:** Android Studio
-*   **Database:**
-    *   **Cloud Storage:** Firebase Firestore & Firebase Storage (for images)
-    *   **Local Caching:** Room DB
-*   **Networking:** Retrofit
-*   **APIs:**
+*   **Architecture:** Model-View-ViewModel (MVVM), Repository Pattern
+*   **UI & Design:** Jetpack Compose with Material Design 3
+*   **Navigation:** Compose Navigation
+*   **Local Database / Storage:**
+    *   **Room Database:** For structured storage of trip data.
+    *   **Jetpack DataStore:** For key-value storage of user profile preferences.
+*   **Version Control:** Git & GitHub
+
+*(The following tools from the original plan will be integrated in future development stages):*
+*   **AI & Machine Learning:**
+    *   **Google AI SDK for Gemini** (or Gemini API via REST)
+*   **Cloud & Networking:**
+    *   Firebase Firestore & Firebase Storage
+    *   Retrofit
+*   **APIs & Services:**
     *   Google Maps API
     *   OpenWeather API
     *   Android CameraX
-*   **UI & Design:**
-    *   Material Design 3
-    *   Custom Animations & Transitions
-*   **Version Control:** Git & GitHub
