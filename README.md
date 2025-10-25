@@ -37,9 +37,11 @@ The following is a breakdown of the originally planned features and their curren
 *   **✅ Implemented - Trip Planning & Itinerary Management**
     *   A robust trip planning module has been created. Users can fill out a form to create a new trip, including destination, dates and interests. This input will serve as the prompt for the AI. All created trips are saved to a local Room database and displayed on the Home Screen.
 
-*   **🟡 In Progress - User Profiles**
-    *   **Implemented:** A local profile system is in place. Users can save their name, location and favorite interests, which are persisted on the device using Jetpack DataStore. The Profile Screen has a full UI for both viewing and editing this information.
-    *   **Pending:** Secure cloud-based user authentication (Sign-up/Login with Firebase).
+*   **🟢 Complete - User Profiles**
+    *   **Implemented:** The local profile system is now fully user-based and linked to Firebase Authentication. Each user can save their name, location, and favorite interests, which are securely persisted on the device using Jetpack DataStore under their unique Firebase UID.
+    *   **Implemented:** Profiles are automatically cleared on logout to prevent cross-user data visibility.
+    *   **Implemented:** Trips and profiles now share the same authentication layer, ensuring consistent user-specific data handling throughout the app.
+    *   **Status:** Feature finalized and tested. User-specific data persistence is fully functional and stable.
 
 *   **⚫ Not Implemented - Real-Time Navigation & Geolocation**
     *   The UI contains placeholders for map integration, but the connection to the Google Maps API is a future task.
