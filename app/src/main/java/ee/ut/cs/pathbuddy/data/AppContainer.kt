@@ -5,7 +5,7 @@ import androidx.room.Room
 import ee.ut.cs.pathbuddy.data.local.PathBuddyDatabase
 import ee.ut.cs.pathbuddy.data.profile.ProfileRepository
 import ee.ut.cs.pathbuddy.data.profile.profileDataStore
-import ee.ut.cs.pathbuddy.data.trip.TripRepository
+import ee.ut.cs.pathbuddy.data.repository.TripRepository
 
 /**
  * Defines the contract for the application's dependency container.

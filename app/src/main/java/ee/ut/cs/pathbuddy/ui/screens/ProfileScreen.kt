@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import ee.ut.cs.pathbuddy.PathBuddyApplication
 import ee.ut.cs.pathbuddy.ui.components.BackButton
 import ee.ut.cs.pathbuddy.ui.viewmodel.ProfileViewModel
@@ -85,6 +86,7 @@ fun ProfileScreen(navController: NavController) {
             )
         } else {
             DisplayProfileContent(
+                navController = navController,
                 padding = padding,
                 uiState = uiState,
                 primaryBlue = primaryBlue,
@@ -100,6 +102,7 @@ fun ProfileScreen(navController: NavController) {
  */
 @Composable
 private fun DisplayProfileContent(
+    navController: NavController,
     padding: PaddingValues,
     uiState: ee.ut.cs.pathbuddy.ui.viewmodel.ProfileUiState,
     primaryBlue: Color,
@@ -164,6 +167,23 @@ private fun DisplayProfileContent(
                 Divider()
                 ProfileDetailRow(label = "Favorite Interests", value = uiState.favoriteInterests.ifBlank { "Not set" })
             }
+        }
+        Button(
+            onClick = {
+                FirebaseAuth.getInstance().signOut()
+                navController.navigate("login") {
+                    popUpTo("home") { inclusive = true }
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error,
+                contentColor = Color.White
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            Text("Logout")
         }
     }
 }

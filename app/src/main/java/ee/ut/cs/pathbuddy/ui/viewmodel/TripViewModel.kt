@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import ee.ut.cs.pathbuddy.data.AppContainer
 import ee.ut.cs.pathbuddy.data.trip.Trip
-import ee.ut.cs.pathbuddy.data.trip.TripRepository
+import ee.ut.cs.pathbuddy.data.repository.TripRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest

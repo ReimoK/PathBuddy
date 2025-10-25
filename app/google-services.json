@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "648236458469",
+    "project_id": "pathbuddy-a195c",
+    "storage_bucket": "pathbuddy-a195c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648236458469:android:3b1ba4a46c943500b30f0c",
+        "android_client_info": {
+          "package_name": "ee.ut.cs.pathbuddy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRauiQ2sNLVAyqjrjUdNPhrRh6AoRTulk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

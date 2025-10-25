@@ -25,6 +25,7 @@ fun TripEntity.toDomain(): Trip =
 fun Trip.toEntity(): TripEntity =
     TripEntity(
         id = id,
+        userId = "", // This will be replaced with the current user's UID inside the repository.
         destination = destination,
         startDate = startDate,
         endDate = endDate,

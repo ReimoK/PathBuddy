@@ -7,12 +7,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-// A constant for the DataStore file name.
+// A constant for the base DataStore file name.
 private const val PROFILE_DATASTORE = "profile_preferences"
 
 /**
@@ -29,7 +30,8 @@ val Context.profileDataStore: DataStore<Preferences> by preferencesDataStore(
  * @param dataStore The DataStore instance used for persisting profile data.
  */
 class ProfileRepository(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance() // 🔹 Firebase kasutaja identifikaator
 ) {
 
     /**
@@ -44,6 +46,7 @@ class ProfileRepository(
 
     /**
      * A flow that emits the user's profile data whenever it changes.
+     * Each logged-in user has their own isolated data, keyed by UID.
      */
     val profile: Flow<ProfileData> = dataStore.data
         .catch { exception ->
@@ -52,23 +55,39 @@ class ProfileRepository(
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
         .map { preferences ->
-            // Map the raw Preferences object to a structured ProfileData object.
+            val uid = auth.currentUser?.uid ?: "guest"
+            // Each field is stored under a UID-specific key.
             ProfileData(
-                name = preferences[Keys.NAME] ?: "",
-                homeBase = preferences[Keys.HOME_BASE] ?: "",
-                favoriteInterests = preferences[Keys.FAVORITE_INTERESTS] ?: ""
+                name = preferences[stringPreferencesKey("${uid}_name")] ?: "",
+                homeBase = preferences[stringPreferencesKey("${uid}_home_base")] ?: "",
+                favoriteInterests = preferences[stringPreferencesKey("${uid}_favorite_interests")] ?: ""
             )
         }
 
     /**
      * Suspended function to update the user's profile data in the DataStore.
+     * Each user's data is stored under their own UID to keep profiles separate.
      * @param profileData The new profile data to save.
      */
     suspend fun updateProfile(profileData: ProfileData) {
+        val uid = auth.currentUser?.uid ?: return
         dataStore.edit { prefs ->
-            prefs[Keys.NAME] = profileData.name
-            prefs[Keys.HOME_BASE] = profileData.homeBase
-            prefs[Keys.FAVORITE_INTERESTS] = profileData.favoriteInterests
+            prefs[stringPreferencesKey("${uid}_name")] = profileData.name
+            prefs[stringPreferencesKey("${uid}_home_base")] = profileData.homeBase
+            prefs[stringPreferencesKey("${uid}_favorite_interests")] = profileData.favoriteInterests
+        }
+    }
+
+    /**
+     * Clears the current user's stored profile data.
+     * Useful when logging out to prevent another user from seeing previous info.
+     */
+    suspend fun clearProfile() {
+        val uid = auth.currentUser?.uid ?: return
+        dataStore.edit { prefs ->
+            prefs.remove(stringPreferencesKey("${uid}_name"))
+            prefs.remove(stringPreferencesKey("${uid}_home_base"))
+            prefs.remove(stringPreferencesKey("${uid}_favorite_interests"))
         }
     }
 }

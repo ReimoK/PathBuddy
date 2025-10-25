@@ -9,7 +9,7 @@ import ee.ut.cs.pathbuddy.data.AppContainer
 import ee.ut.cs.pathbuddy.data.profile.ProfileData
 import ee.ut.cs.pathbuddy.data.profile.ProfileRepository
 import ee.ut.cs.pathbuddy.data.trip.Trip
-import ee.ut.cs.pathbuddy.data.trip.TripRepository
+import ee.ut.cs.pathbuddy.data.repository.TripRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
